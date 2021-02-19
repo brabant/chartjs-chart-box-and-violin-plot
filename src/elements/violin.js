@@ -4,6 +4,7 @@ import * as Chart from 'chart.js';
 import ArrayElementBase, {
   defaults
 } from './base';
+import {rnd} from '../data';
 
 
 Chart.defaults.global.elements.violin = {
@@ -173,6 +174,26 @@ const Violin = Chart.elements.Violin = ArrayElementBase.extend({
   },
   _getOutliers() {
     return this._view.violin.outliers || [];
+  },
+  _getItems() {
+    return this._view.violin ? this._view.violin.items || [] : [];
+  },
+  _getPoints(vert, datasetIndex, index, vm) {
+    const random = rnd(datasetIndex * 1000 + index);
+    const items = this._view.violin ? this._view.violin.items || [] : [];
+    let points = [];
+
+    if (vert) {
+      items.forEach((v) => {
+        points.push({x: vm.x - vm.width / 2 + random() * vm.width, y: v});
+
+      });
+    } else {
+      items.forEach((v) => {
+        points.push({x: v, y: vm.y - vm.height / 2 + random() * vm.height});
+      });
+    }
+    return points;
   },
 });
 
