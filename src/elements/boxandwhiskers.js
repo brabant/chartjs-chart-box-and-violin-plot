@@ -4,6 +4,7 @@ import * as Chart from 'chart.js';
 import ArrayElementBase, {
   defaults
 } from './base';
+import {rnd} from '../data';
 
 
 Chart.defaults.global.elements.boxandwhiskers = {
@@ -249,6 +250,26 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
   },
   _getOutliers() {
     return this._view.boxplot ? this._view.boxplot.outliers || [] : [];
+  },
+  _getItems() {
+    return this._view.boxplot ? this._view.boxplot.items || [] : [];
+  },
+  _getPoints(vert, datasetIndex, index, vm) {
+    const random = rnd(datasetIndex * 1000 + index);
+    const items = this._view.boxplot ? this._view.boxplot.items || [] : [];
+    let points = [];
+
+    if (vert) {
+      items.forEach((v) => {
+        points.push({x: vm.x - vm.width / 2 + random() * vm.width, y: v});
+
+      });
+    } else {
+      items.forEach((v) => {
+        points.push({x: v, y: vm.y - vm.height / 2 + random() * vm.height});
+      });
+    }
+    return points;
   },
 });
 
